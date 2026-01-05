@@ -1,0 +1,60 @@
+# Classic Poster Template
+# Enhanced contrast with custom gradient overlay
+# Uses musikman gradient for a different gradient effect
+# Note: Template ID is determined by the directory name
+
+name: "Musikman"
+description: "White border and blurred background style"
+version: "1.0"
+author: "PosterApp"
+
+# ImageMagick command template
+steps:
+  - name: "Prepare poster base"
+    commands: |
+      ( {{posterPath}}
+        -resize {{zoomedWidth}}x{{zoomedHeight}}^
+        -gravity center
+        -extent {{posterWidth}}x{{posterHeight}}
+        -blur 0x8
+        -fill black -colorize 50%
+      )
+  
+  - name: "Apply custom gradient overlay"
+    commands: "{{resourcesDir}}/overlays/musikmann2000.png -composite"
+  
+  - name: "Add logo"
+    condition: hasLogo
+    commands: |
+      ( {{logoPath}}
+        -resize {{logoMaxWidth}}x{{logoTargetHeight}}
+      )
+      -gravity center
+      -composite
+
+  - name: "Add season text"
+    condition: isSeason
+    commands: |
+      -font Arial-Bold
+      -pointsize 45
+      -fill white
+      -stroke black
+      -strokewidth 2
+      -gravity south
+      -annotate +0+100 "{{seasonName}}"
+
+  - name: "Save output"
+    output: "{{outputPath}}"
+
+# Logo sizing configuration (slightly larger than default)
+logo:
+  oneLineHeight: 110      # Slightly larger for wide logos
+  tallHeight: 220         # Slightly larger for tall logos
+  aspectThresholdLow: 1.0 # Aspect ratio threshold for square/tall logos
+  aspectThresholdHigh: 2.0 # Aspect ratio threshold for wide logos
+  maxWidth: 650           # Wider max width
+
+# Poster output configuration
+poster:
+  width: 1000
+  height: 1500

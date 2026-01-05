@@ -1,0 +1,61 @@
+# Default Poster Template
+# This template replicates the original hardcoded poster generation behavior
+# Users can copy this directory to create custom templates with different styles
+# Note: Template ID is determined by the directory name
+
+name: "DarkMatte Style"
+description: "DarkMatte style with gradient overlay and logo placement"
+version: "1.0"
+
+# ImageMagick command template
+# Placeholders are replaced with actual values during generation
+# Steps with conditions are processed based on user settings
+steps:
+  - name: "Prepare poster base"
+    commands: |
+      ( {{posterPath}}
+        -resize {{zoomedWidth}}x{{zoomedHeight}}^
+        -gravity center
+        -extent {{posterWidth}}x{{posterHeight}}
+        -level -54%,80%
+        -colorspace RGB
+      )
+  
+  - name: "Apply gradient overlay"
+    commands: "{{resourcesDir}}/overlays/defaultGradient.png -composite"
+  
+  - name: "Add logo"
+    condition: hasLogo
+    commands: |
+      ( {{logoPath}}
+        -resize {{logoMaxWidth}}x{{logoTargetHeight}}
+      )
+      -gravity south
+      -geometry +0+175
+      -composite
+
+  - name: "Add season text"
+    condition: isSeason
+    commands: |
+      -font {{resourcesDir}}/fonts/core-sans-a/CoreSansA65Bold.otf
+      -pointsize 40
+      -fill white
+      -gravity south
+      -annotate +0+125 "{{seasonName}}"
+
+  - name: "Save output"
+    output: "{{outputPath}}"
+
+# Logo sizing configuration
+# These values control how logos are sized based on their aspect ratio
+logo:
+  oneLineHeight: 100      # Height for wide logos (aspect ratio >= 2.0)
+  tallHeight: 200         # Height for tall/square logos (aspect ratio <= 1.0)
+  aspectThresholdLow: 1.0 # Aspect ratio threshold for square/tall logos
+  aspectThresholdHigh: 2.0 # Aspect ratio threshold for wide logos
+  maxWidth: 600           # Maximum logo width in pixels
+
+# Poster output configuration
+poster:
+  width: 1000             # Final poster width in pixels
+  height: 1500            # Final poster height in pixels
