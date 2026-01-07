@@ -1,0 +1,71 @@
+# Square Glow Poster Template
+# Featured square at top with glowing border and dark textured frame
+# Note: Template ID is determined by the directory name
+
+name: "Titan"
+description: "Elegant poster with subtle yellow gradient overlay and black ribbon with gold borders containing centered logo at the bottom"
+version: "1.0"
+author: "PosterApp"
+
+# ImageMagick command template
+steps:
+  - name: "Prepare poster base"
+    commands: |
+      ( {{posterPath}}
+        -resize {{zoomedWidth}}x{{zoomedHeight}}^
+        -gravity center
+        -extent {{posterWidth}}x{{posterHeight}}
+      )
+
+  - name: "Add top white gradient"
+    commands: |
+      ( -size {{posterWidth}}x400 gradient:yellow-transparent
+        -alpha set -channel A -evaluate multiply 0.1 +channel
+      )
+      -gravity north
+      -compose over
+      -composite
+
+  - name: "Add ribbon with logo"
+    condition: "hasLogo"
+    commands: |
+      ( -size {{posterWidth}}x200 xc:black
+        -fill gold -draw "rectangle 0,0 {{posterWidth}},3"
+        -fill gold -draw "rectangle 0,197 {{posterWidth}},200"
+        ( {{logoPath}}
+          -resize 500x{{logoTargetHeight}}
+        )
+        -gravity center -compose over -composite
+      )
+      -gravity south
+      -geometry +0+75
+      -compose over
+      -composite
+
+  - name: "Add ribbon without logo"
+    condition: "!hasLogo"
+    commands: |
+      ( -size {{posterWidth}}x200 xc:black
+        -fill gold -draw "rectangle 0,0 {{posterWidth}},3"
+        -fill gold -draw "rectangle 0,197 {{posterWidth}},200"
+      )
+      -gravity south
+      -geometry +0+75
+      -compose over
+      -composite
+
+  - name: "Save output"
+    output: "{{outputPath}}"
+
+# Logo sizing configuration
+logo:
+  oneLineHeight: 90
+  tallHeight: 170
+  aspectThresholdLow: 1.0
+  aspectThresholdHigh: 2.0
+  maxWidth: 500
+
+# Poster output configuration
+poster:
+  width: 1000
+  height: 1500

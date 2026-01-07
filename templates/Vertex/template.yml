@@ -1,0 +1,85 @@
+# Top Frame Poster Template
+# Elegant corner borders with gradient overlays
+# Note: Template ID is determined by the directory name
+
+name: "Vertex"
+description: "Elegant corner borders with top and bottom gradient overlays, featuring logo placement at the top"
+version: "1.0"
+author: "PosterApp"
+
+# ImageMagick command template
+steps:
+  - name: "Prepare poster base"
+    commands: |
+      ( {{posterPath}}
+        -resize {{zoomedWidth}}x{{zoomedHeight}}^
+        -gravity center
+        -extent {{posterWidth}}x{{posterHeight}}
+      )
+
+  - name: "Add top gradient overlay"
+    commands: |
+      (
+        -size {{posterWidth}}x400
+        gradient:black-none
+      )
+      -gravity north
+      -compose over
+      -composite
+
+  - name: "Add bottom gradient overlay"
+    commands: |
+      (
+        -size {{posterWidth}}x400
+        gradient:none-black
+      )
+      -gravity south
+      -compose over
+      -composite
+
+  - name: "Add fancy corner borders"
+    commands: |
+      (
+        -size {{posterWidth}}x{{posterHeight}}
+        xc:none
+        -stroke white
+        -strokewidth 3
+        -fill none
+        -draw "polyline 40,200 40,40 200,40"
+        -draw "polyline 50,210 50,50 210,50"
+        -draw "polyline 960,200 960,40 800,40"
+        -draw "polyline 950,210 950,50 790,50"
+        -draw "polyline 40,1300 40,1460 200,1460"
+        -draw "polyline 50,1290 50,1450 210,1450"
+        -draw "polyline 960,1300 960,1460 800,1460"
+        -draw "polyline 950,1290 950,1450 790,1450"
+      )
+      -compose over
+      -composite
+
+  - name: "Add logo"
+    condition: "hasLogo"
+    commands: |
+      ( {{logoPath}}
+        -resize {{logoMaxWidth}}x{{logoTargetHeight}}
+      )
+      -gravity north
+      -geometry +0+60
+      -compose over
+      -composite
+
+  - name: "Save output"
+    output: "{{outputPath}}"
+
+# Logo sizing configuration
+logo:
+  oneLineHeight: 90
+  tallHeight: 170
+  aspectThresholdLow: 1.0
+  aspectThresholdHigh: 2.0
+  maxWidth: 500
+
+# Poster output configuration
+poster:
+  width: 1000
+  height: 1500

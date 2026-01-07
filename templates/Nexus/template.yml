@@ -3,8 +3,8 @@
 # Uses musikman gradient for a different gradient effect
 # Note: Template ID is determined by the directory name
 
-name: "Musikman"
-description: "White border and blurred background style"
+name: "Nexus"
+description: "Logo in the middle with a blurred background style"
 version: "1.0"
 author: "PosterApp"
 
@@ -19,9 +19,6 @@ steps:
         -blur 0x8
         -fill black -colorize 50%
       )
-  
-  - name: "Apply custom gradient overlay"
-    commands: "{{resourcesDir}}/overlays/musikmann2000.png -composite"
   
   - name: "Add logo"
     condition: hasLogo

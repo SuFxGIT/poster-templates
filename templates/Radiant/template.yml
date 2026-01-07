@@ -1,0 +1,59 @@
+# Radiant Frame Poster Template
+# Thin yellow border with radial vignette effect
+# Note: Template ID is determined by the directory name
+
+name: "Radiant"
+description: "Thin yellow border with dark radial vignette and small south-centered logo"
+version: "1.0"
+author: "PosterApp"
+
+# ImageMagick command template
+steps:
+  - name: "Prepare poster base"
+    commands: |
+      ( {{posterPath}}
+        -resize {{zoomedWidth}}x{{zoomedHeight}}^
+        -gravity center
+        -extent {{posterWidth}}x{{posterHeight}}
+      )
+
+  - name: "Add radial fade"
+    commands: |
+      ( -size {{posterWidth}}x{{posterHeight}}
+        radial-gradient:none-black
+      )
+      -gravity south
+      -composite
+
+  - name: "Add border"
+    commands: |
+      -stroke yellow
+      -strokewidth 3
+      -fill none
+      -draw "rectangle 40,40 960,1460"
+
+  - name: "Add logo"
+    condition: hasLogo
+    commands: |
+      ( {{logoPath}}
+        -resize {{logoMaxWidth}}x{{logoTargetHeight}}
+      )
+      -gravity south
+      -geometry +0+100
+      -composite
+
+  - name: "Save output"
+    output: "{{outputPath}}"
+
+# Logo sizing configuration
+logo:
+  oneLineHeight: 90
+  tallHeight: 170
+  aspectThresholdLow: 1.0
+  aspectThresholdHigh: 2.0
+  maxWidth: 500
+
+# Poster output configuration
+poster:
+  width: 1000
+  height: 1500

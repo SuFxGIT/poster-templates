@@ -22,7 +22,7 @@ steps:
       )
   
   - name: "Apply gradient overlay"
-    commands: "{{resourcesDir}}/overlays/defaultGradient.png -composite"
+    commands: "/overlays/defaultGradient.png -composite"
   
   - name: "Add logo"
     condition: hasLogo
@@ -37,7 +37,7 @@ steps:
   - name: "Add season text"
     condition: isSeason
     commands: |
-      -font {{resourcesDir}}/fonts/core-sans-a/CoreSansA65Bold.otf
+      -font /fonts/core-sans-a/CoreSansA65Bold.otf
       -pointsize 40
       -fill white
       -gravity south

@@ -1,0 +1,62 @@
+# Classic Poster Template
+# Enhanced contrast with custom gradient overlay
+# Uses musikman gradient for a different gradient effect
+# Note: Template ID is determined by the directory name
+
+name: "Marvel"
+description: "Solid black bottom overlay and a White border, logo positioned in the south"
+version: "1.0"
+author: "PosterApp"
+
+# ImageMagick command template
+steps:
+  - name: "Prepare poster base"
+    commands: |
+      ( {{posterPath}}
+        -resize {{zoomedWidth}}x{{zoomedHeight}}^
+        -gravity center
+        -extent {{posterWidth}}x{{posterHeight}}
+      )
+
+  - name: "Add border"
+    commands: |
+      -stroke white
+      -strokewidth 90
+      -fill none
+      -draw "rectangle 0,0 999,1499"
+
+  - name: "Add solid black bottom with logo"
+    condition: hasLogo
+    commands: |
+      ( -size {{posterWidth}}x210 xc:black
+        ( {{logoPath}}
+          -resize {{logoMaxWidth}}x{{logoTargetHeight}}
+        )
+        -gravity center -compose over -composite
+      )
+      -gravity south
+      -compose over
+      -composite
+
+  - name: "Add solid black bottom without logo"
+    condition: "!hasLogo"
+    commands: |
+      ( -size {{posterWidth}}x210 xc:black )
+      -gravity south
+      -composite
+
+  - name: "Save output"
+    output: "{{outputPath}}"
+
+# Logo sizing configuration (slightly larger than default)
+logo:
+  oneLineHeight: 110      # Slightly larger for wide logos
+  tallHeight: 220         # Slightly larger for tall logos
+  aspectThresholdLow: 1.0
+  aspectThresholdHigh: 2.0
+  maxWidth: 650           # Wider max width
+
+# Poster output configuration
+poster:
+  width: 1000
+  height: 1500

@@ -1,0 +1,67 @@
+# Signature Frame Poster Template
+# Black and white with faded border effect
+# Note: Template ID is determined by the directory name
+
+name: "Greyscale-Text"
+description: "Black and white filter with faded border and small south-centered signature text"
+version: "1.0"
+author: "PosterApp"
+
+# ImageMagick command template
+steps:
+  - name: "Prepare poster base"
+    commands: |
+      ( {{posterPath}}
+        -resize {{zoomedWidth}}x{{zoomedHeight}}^
+        -gravity center
+        -extent {{posterWidth}}x{{posterHeight}}
+        -colorspace Gray
+      )
+
+  - name: "Add bottom gray fade"
+    commands: |
+      ( -size {{posterWidth}}x600
+        gradient:rgba(0,0,0,0)-rgba(0,0,0,0.6)
+      )
+      -gravity south
+      -composite
+
+  - name: "Add faded border"
+    commands: |
+      -stroke "rgba(255,255,255,0.3)"
+      -strokewidth 50
+      -fill none
+      -draw "rectangle 0,0 999,1499"
+      -stroke none
+      -strokewidth 0
+
+  - name: "Add showname text"
+    condition: hasShowName
+    commands: |
+      ( -background none
+        -fill white
+        -font Colus-Regular.ttf
+        -pointsize 96
+        -size 900x250
+        -gravity center
+        caption:{{showName.upper}}
+      )
+      -gravity south
+      -geometry +0+60
+      -composite
+
+  - name: "Save output"
+    output: "{{outputPath}}"
+
+# Logo sizing configuration
+logo:
+  oneLineHeight: 90
+  tallHeight: 170
+  aspectThresholdLow: 1.0
+  aspectThresholdHigh: 2.0
+  maxWidth: 500
+
+# Poster output configuration
+poster:
+  width: 1000
+  height: 1500
