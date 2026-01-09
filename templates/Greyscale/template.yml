@@ -4,7 +4,7 @@
 
 name: "Greyscale"
 description: "Black and white filter with faded border and small south-centered signature text"
-version: "1.0"
+version: "1.1"
 author: "PosterApp"
 
 # ImageMagick command template
