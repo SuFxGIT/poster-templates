@@ -5,7 +5,7 @@
 
 name: "Status-Radiant"
 description: "Dynamic status-colored border and badge with radial vignette effect"
-version: "1.0"
+version: "1.1"
 author: "PosterApp"
 
 # Custom variables section
