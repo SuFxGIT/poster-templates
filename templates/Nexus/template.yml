@@ -39,6 +39,3 @@ steps:
       -strokewidth 2
       -gravity south
       -annotate +0+100 "{{seasonName}}"
-
-  - name: "Save output"
-    output: "{{outputPath}}"
