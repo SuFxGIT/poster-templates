@@ -42,16 +42,3 @@ steps:
 
   - name: "Save output"
     output: "{{outputPath}}"
-
-# Logo sizing configuration (slightly larger than default)
-logo:
-  oneLineHeight: 110      # Slightly larger for wide logos
-  tallHeight: 220         # Slightly larger for tall logos
-  aspectThresholdLow: 1.0 # Aspect ratio threshold for square/tall logos
-  aspectThresholdHigh: 2.0 # Aspect ratio threshold for wide logos
-  maxWidth: 650           # Wider max width
-
-# Poster output configuration
-poster:
-  width: 1000
-  height: 1500
