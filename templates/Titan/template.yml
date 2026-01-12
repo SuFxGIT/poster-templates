@@ -4,7 +4,7 @@
 
 name: "Titan"
 description: "Elegant poster with subtle yellow gradient overlay and black ribbon with gold borders containing centered logo at the bottom"
-version: "1.0"
+version: "1.1"
 author: "PosterApp"
 
 # ImageMagick command template

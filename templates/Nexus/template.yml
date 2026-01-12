@@ -5,7 +5,7 @@
 
 name: "Nexus"
 description: "Logo in the middle with a blurred background style"
-version: "1.0"
+version: "1.1"
 author: "PosterApp"
 
 # ImageMagick command template

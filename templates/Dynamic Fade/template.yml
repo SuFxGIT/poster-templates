@@ -4,7 +4,7 @@
 
 name: "Dynamic Fade"
 description: "Filter with dynamic fade based on poster's dominant color"
-version: "2.0"
+version: "2.1"
 author: "PosterApp"
 
 # ImageMagick command template

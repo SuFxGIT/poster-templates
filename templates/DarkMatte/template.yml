@@ -5,7 +5,7 @@
 
 name: "DarkMatte Style"
 description: "DarkMatte style with gradient overlay and logo placement"
-version: "1.0"
+version: "1.1"
 
 # ImageMagick command template
 # Placeholders are replaced with actual values during generation
@@ -42,20 +42,3 @@ steps:
       -fill white
       -gravity south
       -annotate +0+125 "{{seasonName}}"
-
-  - name: "Save output"
-    output: "{{outputPath}}"
-
-# Logo sizing configuration
-# These values control how logos are sized based on their aspect ratio
-logo:
-  oneLineHeight: 100      # Height for wide logos (aspect ratio >= 2.0)
-  tallHeight: 200         # Height for tall/square logos (aspect ratio <= 1.0)
-  aspectThresholdLow: 1.0 # Aspect ratio threshold for square/tall logos
-  aspectThresholdHigh: 2.0 # Aspect ratio threshold for wide logos
-  maxWidth: 600           # Maximum logo width in pixels
-
-# Poster output configuration
-poster:
-  width: 1000             # Final poster width in pixels
-  height: 1500            # Final poster height in pixels

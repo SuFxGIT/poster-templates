@@ -5,7 +5,7 @@
 
 name: "Marvel"
 description: "Solid black bottom overlay and a White border, logo positioned in the south"
-version: "1.0"
+version: "1.1"
 author: "PosterApp"
 
 # ImageMagick command template
@@ -44,6 +44,3 @@ steps:
       ( -size {{posterWidth}}x210 xc:black )
       -gravity south
       -composite
-
-  - name: "Save output"
-    output: "{{outputPath}}"

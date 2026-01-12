@@ -4,7 +4,7 @@
 
 name: "Greyscale"
 description: "Black and white filter with faded border and small south-centered signature text"
-version: "1.1"
+version: "1.2"
 author: "PosterApp"
 
 # ImageMagick command template
@@ -35,19 +35,3 @@ steps:
       -gravity south
       -geometry +0+100
       -composite
-
-  - name: "Save output"
-    output: "{{outputPath}}"
-
-# Logo sizing configuration
-logo:
-  oneLineHeight: 100
-  tallHeight: 200
-  aspectThresholdLow: 1.0
-  aspectThresholdHigh: 2.0
-  maxWidth: 600
-
-# Poster output configuration
-poster:
-  width: 1000
-  height: 1500

@@ -4,7 +4,7 @@
 
 name: "Vertex"
 description: "Elegant corner borders with top and bottom gradient overlays, featuring logo placement at the top"
-version: "1.0"
+version: "1.1"
 author: "PosterApp"
 
 # ImageMagick command template

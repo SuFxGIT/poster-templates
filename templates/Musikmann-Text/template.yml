@@ -5,7 +5,7 @@
 
 name: "Musikmann-Text"
 description: "White border with show name at the bottom, no logo"
-version: "1.0"
+version: "1.1"
 author: "PosterApp"
 
 # ImageMagick command template
