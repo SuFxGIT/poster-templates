@@ -7,37 +7,39 @@ description: "Thin yellow border with dark radial vignette and small south-cente
 version: "1.1"
 author: "PosterApp"
 
-# ImageMagick command template
 steps:
-  - name: "Prepare poster base"
-    commands: |
-      ( {{posterPath}}
-        -resize {{zoomedWidth}}x{{zoomedHeight}}^
-        -gravity center
-        -extent {{posterWidth}}x{{posterHeight}}
-      )
+  - name: "add-radial-fade"
+    args:
+      - "("
+      - "-size"
+      - "{{posterWidth}}x{{posterHeight}}"
+      - "radial-gradient:none-black"
+      - ")"
+      - "-gravity"
+      - "south"
+      - "-composite"
 
-  - name: "Add radial fade"
-    commands: |
-      ( -size {{posterWidth}}x{{posterHeight}}
-        radial-gradient:none-black
-      )
-      -gravity south
-      -composite
+  - name: "add-border"
+    args:
+      - "-stroke"
+      - "yellow"
+      - "-strokewidth"
+      - "3"
+      - "-fill"
+      - "none"
+      - "-draw"
+      - "rectangle 40,40 960,1460"
 
-  - name: "Add border"
-    commands: |
-      -stroke yellow
-      -strokewidth 3
-      -fill none
-      -draw "rectangle 40,40 960,1460"
-
-  - name: "Add logo"
-    condition: hasLogo
-    commands: |
-      ( {{logoPath}}
-        -resize {{logoMaxWidth}}x{{logoTargetHeight}}
-      )
-      -gravity south
-      -geometry +0+100
-      -composite
+  - name: "add-logo"
+    condition: "hasLogo"
+    args:
+      - "("
+      - "{{logoPath}}"
+      - "-resize"
+      - "600x200"
+      - ")"
+      - "-gravity"
+      - "south"
+      - "-geometry"
+      - "+0+100"
+      - "-composite"

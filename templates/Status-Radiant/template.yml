@@ -8,23 +8,20 @@ description: "Dynamic status-colored border and badge with radial vignette effec
 version: "1.2"
 author: "PosterApp"
 
-# Custom variables section
 variables:
-  # Status-based border color
   statusColor:
-    type: "map"
-    source: "{{status}}"
+    type: map
+    source: "status"
     mappings:
-      "Returning Series": "#00FF00"  # Green
-      "Ended": "#FF0000"              # Red
-      "Canceled": "#FF0000"           # Red
-      "In Production": "#FFA500"      # Orange
-    default: "#FFFF00"                # Yellow
+      "Returning Series": "#00FF00"
+      "Ended": "#FF0000"
+      "Canceled": "#FF0000"
+      "In Production": "#FFA500"
+    default: "#FFFF00"
 
-  # Status-based text label
   statusLabel:
-    type: "map"
-    source: "{{status}}"
+    type: map
+    source: "status"
     mappings:
       "Returning Series": "Returning Series"
       "Ended": "Ended"
@@ -32,47 +29,56 @@ variables:
       "In Production": "In Production"
     default: "UNKNOWN"
 
-# ImageMagick command template
 steps:
-  - name: "Prepare poster base"
-    commands: |
-      ( {{posterPath}}
-        -resize {{zoomedWidth}}x{{zoomedHeight}}^
-        -gravity center
-        -extent {{posterWidth}}x{{posterHeight}}
-      )
+  - name: "add-radial-fade"
+    args:
+      - "("
+      - "-size"
+      - "{{posterWidth}}x{{posterHeight}}"
+      - "radial-gradient:none-black"
+      - ")"
+      - "-gravity"
+      - "south"
+      - "-composite"
 
-  - name: "Add radial fade"
-    commands: |
-      ( -size {{posterWidth}}x{{posterHeight}}
-        radial-gradient:none-black
-      )
-      -gravity south
-      -composite
+  - name: "add-status-border"
+    args:
+      - "-stroke"
+      - "{{statusColor}}"
+      - "-strokewidth"
+      - "9"
+      - "-fill"
+      - "none"
+      - "-draw"
+      - "rectangle 40,40 960,1460"
 
-  - name: "Add status-based border"
-    commands: |
-      -stroke "{{statusColor}}"
-      -strokewidth 9
-      -fill none
-      -draw "rectangle 40,40 960,1460"
+  - name: "add-status-badge"
+    condition: "status != null"
+    args:
+      - "-strokewidth"
+      - "0"
+      - "-gravity"
+      - "northeast"
+      - "-fill"
+      - "{{statusColor}}"
+      - "-pointsize"
+      - "40"
+      - "-font"
+      - "{{templateResources}}/fonts/Arial-Bold.ttf"
+      - "-annotate"
+      - "+60+60"
+      - "{{statusLabel}}"
 
-  - name: "Add status badge"
-    condition: hasStatus
-    commands: |
-      -strokewidth 0
-      -gravity northeast
-      -fill "{{statusColor}}"
-      -pointsize 40
-      -font Arial-Bold.ttf
-      -annotate +60+60 "{{statusLabel}}"
-
-  - name: "Add logo"
-    condition: hasLogo
-    commands: |
-      ( {{logoPath}}
-        -resize {{logoMaxWidth}}x{{logoTargetHeight}}
-      )
-      -gravity south
-      -geometry +0+100
-      -composite
+  - name: "add-logo"
+    condition: "hasLogo"
+    args:
+      - "("
+      - "{{logoPath}}"
+      - "-resize"
+      - "600x260"
+      - ")"
+      - "-gravity"
+      - "south"
+      - "-geometry"
+      - "+0+100"
+      - "-composite"

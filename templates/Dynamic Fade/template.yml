@@ -7,61 +7,76 @@ description: "Filter with dynamic fade based on poster's dominant color"
 version: "2.1"
 author: "PosterApp"
 
-# ImageMagick command template
 steps:
-  - name: "Prepare poster base"
-    commands: |
-      ( {{posterPath}}
-        -resize {{zoomedWidth}}x{{zoomedHeight}}^
-        -gravity center
-        -extent {{posterWidth}}x{{posterHeight}}
-      )
-      +write mpr:poster
-      +delete
+  - name: "save-poster-to-register"
+    args:
+      - "+write"
+      - "mpr:poster"
 
-  - name: "Extract dominant color from poster"
-    commands: |
-      mpr:poster
-      ( mpr:poster
-        -gravity south
-        -crop 100%x30%+0+0
-        +repage
-        -scale 1x1!
-        -alpha off
-        +write mpr:dominant
-        +delete
-      )
+  - name: "extract-dominant-color"
+    args:
+      - "("
+      - "mpr:poster"
+      - "-gravity"
+      - "south"
+      - "-crop"
+      - "100%x30%+0+0"
+      - "+repage"
+      - "-scale"
+      - "1x1!"
+      - "-alpha"
+      - "off"
+      - "+write"
+      - "mpr:dominant"
+      - "+delete"
+      - ")"
 
-  - name: "Add solid dominant color bottom"
-    commands: |
-      ( mpr:dominant
-        -resize {{posterWidth}}x200!
-      )
-      -gravity south
-      -composite
+  - name: "add-dominant-color-bottom"
+    args:
+      - "("
+      - "mpr:dominant"
+      - "-resize"
+      - "1000x200!"
+      - ")"
+      - "-gravity"
+      - "south"
+      - "-composite"
 
-  - name: "Add bottom gradient"
-    commands: |
-      ( mpr:dominant
-        -resize {{posterWidth}}x300!
-        ( -size {{posterWidth}}x300
-          gradient:black-white
-        )
-        -alpha off
-        -compose copy-opacity
-        -composite
-      )
-      -gravity south
-      -geometry +0+200
-      -compose over
-      -composite
+  - name: "add-gradient-fade"
+    args:
+      - "("
+      - "mpr:dominant"
+      - "-resize"
+      - "1000x300!"
+      - "("
+      - "-size"
+      - "1000x300"
+      - "gradient:black-white"
+      - ")"
+      - "-alpha"
+      - "off"
+      - "-compose"
+      - "copy-opacity"
+      - "-composite"
+      - ")"
+      - "-gravity"
+      - "south"
+      - "-geometry"
+      - "+0+200"
+      - "-compose"
+      - "over"
+      - "-composite"
 
-  - name: "Add logo"
-    condition: hasLogo
-    commands: |
-      ( {{logoPath}}
-        -resize {{logoMaxWidth}}x{{logoTargetHeight}}
-      )
-      -gravity south
-      -geometry +0+175
-      -composite
+  - name: "add-logo"
+    condition: "hasLogo"
+    args:
+      - "("
+      - "{{logoPath}}"
+      - "-resize"
+      - "600x260"
+      - ")"
+      - "-gravity"
+      - "south"
+      - "-geometry"
+      - "+0+175"
+      - "-composite"

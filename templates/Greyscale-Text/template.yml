@@ -7,45 +7,58 @@ description: "Black and white filter with faded border and small south-centered 
 version: "1.1"
 author: "PosterApp"
 
-# ImageMagick command template
 steps:
-  - name: "Prepare poster base"
-    commands: |
-      ( {{posterPath}}
-        -resize {{zoomedWidth}}x{{zoomedHeight}}^
-        -gravity center
-        -extent {{posterWidth}}x{{posterHeight}}
-        -colorspace Gray
-      )
+  - name: "convert-to-greyscale"
+    args:
+      - "-colorspace"
+      - "Gray"
 
-  - name: "Add bottom gray fade"
-    commands: |
-      ( -size {{posterWidth}}x600
-        gradient:rgba(0,0,0,0)-rgba(0,0,0,0.6)
-      )
-      -gravity south
-      -composite
+  - name: "add-bottom-gray-fade"
+    args:
+      - "("
+      - "-size"
+      - "{{posterWidth}}x600"
+      - "gradient:rgba(0,0,0,0)-rgba(0,0,0,0.6)"
+      - ")"
+      - "-gravity"
+      - "south"
+      - "-composite"
 
-  - name: "Add faded border"
-    commands: |
-      -stroke "rgba(255,255,255,0.3)"
-      -strokewidth 50
-      -fill none
-      -draw "rectangle 0,0 999,1499"
-      -stroke none
-      -strokewidth 0
+  - name: "add-faded-border"
+    args:
+      - "-stroke"
+      - "rgba(255,255,255,0.3)"
+      - "-strokewidth"
+      - "50"
+      - "-fill"
+      - "none"
+      - "-draw"
+      - "rectangle 0,0 999,1499"
+      - "-stroke"
+      - "none"
+      - "-strokewidth"
+      - "0"
 
-  - name: "Add showname text"
-    condition: hasShowName
-    commands: |
-      ( -background none
-        -fill white
-        -font Colus-Regular.ttf
-        -pointsize 96
-        -size 900x250
-        -gravity center
-        caption:{{showName.upper}}
-      )
-      -gravity south
-      -geometry +0+60
-      -composite
+  - name: "show-title-text"
+    condition: "title != null"
+    args:
+      - "("
+      - "-background"
+      - "none"
+      - "-fill"
+      - "white"
+      - "-font"
+      - "{{templateResources}}/fonts/Colus-Regular.ttf"
+      - "-pointsize"
+      - "96"
+      - "-size"
+      - "900x250"
+      - "-gravity"
+      - "center"
+      - "caption:{{title|upper}}"
+      - ")"
+      - "-gravity"
+      - "south"
+      - "-geometry"
+      - "+0+60"
+      - "-composite"

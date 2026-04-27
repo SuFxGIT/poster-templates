@@ -8,39 +8,50 @@ description: "Solid black bottom overlay and a White border, logo positioned in 
 version: "1.1"
 author: "PosterApp"
 
-# ImageMagick command template
 steps:
-  - name: "Prepare poster base"
-    commands: |
-      ( {{posterPath}}
-        -resize {{zoomedWidth}}x{{zoomedHeight}}^
-        -gravity center
-        -extent {{posterWidth}}x{{posterHeight}}
-      )
+  - name: "add-border"
+    args:
+      - "-stroke"
+      - "white"
+      - "-strokewidth"
+      - "90"
+      - "-fill"
+      - "none"
+      - "-draw"
+      - "rectangle 0,0 999,1499"
 
-  - name: "Add border"
-    commands: |
-      -stroke white
-      -strokewidth 90
-      -fill none
-      -draw "rectangle 0,0 999,1499"
+  - name: "add-solid-black-bottom-with-logo"
+    condition: "hasLogo"
+    args:
+      - "("
+      - "-size"
+      - "1000x210"
+      - "xc:black"
+      - "("
+      - "{{logoPath}}"
+      - "-resize"
+      - "600x160"
+      - ")"
+      - "-gravity"
+      - "center"
+      - "-compose"
+      - "over"
+      - "-composite"
+      - ")"
+      - "-gravity"
+      - "south"
+      - "-compose"
+      - "over"
+      - "-composite"
 
-  - name: "Add solid black bottom with logo"
-    condition: hasLogo
-    commands: |
-      ( -size {{posterWidth}}x210 xc:black
-        ( {{logoPath}}
-          -resize {{logoMaxWidth}}x{{logoTargetHeight}}
-        )
-        -gravity center -compose over -composite
-      )
-      -gravity south
-      -compose over
-      -composite
-
-  - name: "Add solid black bottom without logo"
-    condition: "!hasLogo"
-    commands: |
-      ( -size {{posterWidth}}x210 xc:black )
-      -gravity south
-      -composite
+  - name: "add-solid-black-bottom-without-logo"
+    condition: "not hasLogo"
+    args:
+      - "("
+      - "-size"
+      - "1000x210"
+      - "xc:black"
+      - ")"
+      - "-gravity"
+      - "south"
+      - "-composite"

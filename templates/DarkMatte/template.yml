@@ -7,38 +7,44 @@ name: "DarkMatte Style"
 description: "DarkMatte style with gradient overlay and logo placement"
 version: "1.1"
 
-# ImageMagick command template
-# Placeholders are replaced with actual values during generation
-# Steps with conditions are processed based on user settings
 steps:
-  - name: "Prepare poster base"
-    commands: |
-      ( {{posterPath}}
-        -resize {{zoomedWidth}}x{{zoomedHeight}}^
-        -gravity center
-        -extent {{posterWidth}}x{{posterHeight}}
-        -level -54%,80%
-        -colorspace RGB
-      )
-  
-  - name: "Apply gradient overlay"
-    commands: "/overlays/defaultGradient.png -composite"
-  
-  - name: "Add logo"
-    condition: hasLogo
-    commands: |
-      ( {{logoPath}}
-        -resize {{logoMaxWidth}}x{{logoTargetHeight}}
-      )
-      -gravity south
-      -geometry +0+175
-      -composite
+  - name: "darken-base"
+    args:
+      - "-level"
+      - "-54%,80%"
+      - "-colorspace"
+      - "RGB"
 
-  - name: "Add season text"
-    condition: isSeason
-    commands: |
-      -font /fonts/core-sans-a/CoreSansA65Bold.otf
-      -pointsize 40
-      -fill white
-      -gravity south
-      -annotate +0+125 "{{seasonName}}"
+  - name: "gradient-overlay"
+    args:
+      - "{{templateResources}}/overlays/defaultGradient.png"
+      - "-composite"
+
+  - name: "add-logo"
+    condition: "hasLogo"
+    args:
+      - "("
+      - "{{logoPath}}"
+      - "-resize"
+      - "600x260"
+      - ")"
+      - "-gravity"
+      - "south"
+      - "-geometry"
+      - "+0+175"
+      - "-composite"
+
+  - name: "season-label"
+    condition: "isSeason"
+    args:
+      - "-font"
+      - "{{templateResources}}/fonts/core-sans-a/CoreSansA65Bold.otf"
+      - "-pointsize"
+      - "40"
+      - "-fill"
+      - "white"
+      - "-gravity"
+      - "south"
+      - "-annotate"
+      - "+0+125"
+      - "{{seasonName}}"

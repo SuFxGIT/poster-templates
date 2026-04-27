@@ -7,49 +7,82 @@ description: "Elegant poster with subtle yellow gradient overlay and black ribbo
 version: "1.1"
 author: "PosterApp"
 
-# ImageMagick command template
 steps:
-  - name: "Prepare poster base"
-    commands: |
-      ( {{posterPath}}
-        -resize {{zoomedWidth}}x{{zoomedHeight}}^
-        -gravity center
-        -extent {{posterWidth}}x{{posterHeight}}
-      )
+  - name: "add-top-yellow-gradient"
+    args:
+      - "("
+      - "-size"
+      - "1000x400"
+      - "gradient:yellow-transparent"
+      - "-alpha"
+      - "set"
+      - "-channel"
+      - "A"
+      - "-evaluate"
+      - "multiply"
+      - "0.1"
+      - "+channel"
+      - ")"
+      - "-gravity"
+      - "north"
+      - "-compose"
+      - "over"
+      - "-composite"
 
-  - name: "Add top white gradient"
-    commands: |
-      ( -size {{posterWidth}}x400 gradient:yellow-transparent
-        -alpha set -channel A -evaluate multiply 0.1 +channel
-      )
-      -gravity north
-      -compose over
-      -composite
-
-  - name: "Add ribbon with logo"
+  - name: "add-ribbon-with-logo"
     condition: "hasLogo"
-    commands: |
-      ( -size {{posterWidth}}x200 xc:black
-        -fill gold -draw "rectangle 0,0 {{posterWidth}},3"
-        -fill gold -draw "rectangle 0,197 {{posterWidth}},200"
-        ( {{logoPath}}
-          -resize 500x{{logoTargetHeight}}
-        )
-        -gravity center -compose over -composite
-      )
-      -gravity south
-      -geometry +0+75
-      -compose over
-      -composite
+    args:
+      - "("
+      - "-size"
+      - "1000x200"
+      - "xc:black"
+      - "-fill"
+      - "gold"
+      - "-draw"
+      - "rectangle 0,0 1000,3"
+      - "-fill"
+      - "gold"
+      - "-draw"
+      - "rectangle 0,197 1000,200"
+      - "("
+      - "{{logoPath}}"
+      - "-resize"
+      - "500x160"
+      - ")"
+      - "-gravity"
+      - "center"
+      - "-compose"
+      - "over"
+      - "-composite"
+      - ")"
+      - "-gravity"
+      - "south"
+      - "-geometry"
+      - "+0+75"
+      - "-compose"
+      - "over"
+      - "-composite"
 
-  - name: "Add ribbon without logo"
-    condition: "!hasLogo"
-    commands: |
-      ( -size {{posterWidth}}x200 xc:black
-        -fill gold -draw "rectangle 0,0 {{posterWidth}},3"
-        -fill gold -draw "rectangle 0,197 {{posterWidth}},200"
-      )
-      -gravity south
-      -geometry +0+75
-      -compose over
-      -composite
+  - name: "add-ribbon-without-logo"
+    condition: "not hasLogo"
+    args:
+      - "("
+      - "-size"
+      - "1000x200"
+      - "xc:black"
+      - "-fill"
+      - "gold"
+      - "-draw"
+      - "rectangle 0,0 1000,3"
+      - "-fill"
+      - "gold"
+      - "-draw"
+      - "rectangle 0,197 1000,200"
+      - ")"
+      - "-gravity"
+      - "south"
+      - "-geometry"
+      - "+0+75"
+      - "-compose"
+      - "over"
+      - "-composite"

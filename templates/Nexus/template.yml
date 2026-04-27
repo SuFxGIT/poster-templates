@@ -8,34 +8,43 @@ description: "Logo in the middle with a blurred background style"
 version: "1.1"
 author: "PosterApp"
 
-# ImageMagick command template
 steps:
-  - name: "Prepare poster base"
-    commands: |
-      ( {{posterPath}}
-        -resize {{zoomedWidth}}x{{zoomedHeight}}^
-        -gravity center
-        -extent {{posterWidth}}x{{posterHeight}}
-        -blur 0x8
-        -fill black -colorize 50%
-      )
-  
-  - name: "Add logo"
-    condition: hasLogo
-    commands: |
-      ( {{logoPath}}
-        -resize {{logoMaxWidth}}x{{logoTargetHeight}}
-      )
-      -gravity center
-      -composite
+  - name: "blur-and-darken"
+    args:
+      - "-blur"
+      - "0x8"
+      - "-fill"
+      - "black"
+      - "-colorize"
+      - "50%"
 
-  - name: "Add season text"
-    condition: isSeason
-    commands: |
-      -font Arial-Bold
-      -pointsize 45
-      -fill white
-      -stroke black
-      -strokewidth 2
-      -gravity south
-      -annotate +0+100 "{{seasonName}}"
+  - name: "add-logo"
+    condition: "hasLogo"
+    args:
+      - "("
+      - "{{logoPath}}"
+      - "-resize"
+      - "700x300"
+      - ")"
+      - "-gravity"
+      - "center"
+      - "-composite"
+
+  - name: "season-label"
+    condition: "isSeason"
+    args:
+      - "-font"
+      - "Arial-Bold"
+      - "-pointsize"
+      - "45"
+      - "-fill"
+      - "white"
+      - "-stroke"
+      - "black"
+      - "-strokewidth"
+      - "2"
+      - "-gravity"
+      - "south"
+      - "-annotate"
+      - "+0+100"
+      - "{{seasonName}}"

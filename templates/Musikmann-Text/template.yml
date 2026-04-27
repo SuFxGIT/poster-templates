@@ -8,62 +8,78 @@ description: "White border with show name at the bottom, no logo"
 version: "1.1"
 author: "PosterApp"
 
-# ImageMagick command template
 steps:
-  - name: "Prepare poster base"
-    commands: |
-      ( {{posterPath}}
-        -resize {{zoomedWidth}}x{{zoomedHeight}}^
-        -gravity center
-        -extent {{posterWidth}}x{{posterHeight}}
-      )
+  - name: "add-solid-black-bottom"
+    args:
+      - "("
+      - "-size"
+      - "1000x200"
+      - "xc:black"
+      - ")"
+      - "-gravity"
+      - "south"
+      - "-composite"
 
-  - name: "Add solid black bottom"
-    commands: |
-      ( -size {{posterWidth}}x200
-        xc:black
-      )
-      -gravity south
-      -composite
+  - name: "add-bottom-gradient"
+    args:
+      - "("
+      - "-size"
+      - "1000x300"
+      - "gradient:transparent-black"
+      - ")"
+      - "-gravity"
+      - "south"
+      - "-geometry"
+      - "+0+200"
+      - "-composite"
 
-  - name: "Add bottom gradient"
-    commands: |
-      ( -size {{posterWidth}}x300
-        gradient:transparent-black
-      )
-      -gravity south
-      -geometry +0+200
-      -composite
+  - name: "add-logo"
+    condition: "hasLogo"
+    args:
+      - "("
+      - "{{logoPath}}"
+      - "-resize"
+      - "600x260"
+      - ")"
+      - "-gravity"
+      - "center"
+      - "-composite"
 
-  - name: "Add logo"
-    condition: hasLogo
-    commands: |
-      ( {{logoPath}}
-        -resize {{logoMaxWidth}}x{{logoTargetHeight}}
-      )
-      -gravity center
-      -composite
+  - name: "add-border"
+    args:
+      - "-stroke"
+      - "white"
+      - "-strokewidth"
+      - "50"
+      - "-fill"
+      - "none"
+      - "-draw"
+      - "rectangle 0,0 999,1499"
+      - "-stroke"
+      - "none"
+      - "-strokewidth"
+      - "0"
 
-  - name: "Add border"
-    commands: |
-      -stroke white
-      -strokewidth 50
-      -fill none
-      -draw "rectangle 0,0 999,1499"
-      -stroke none
-      -strokewidth 0
-
-  - name: "Add showname text"
-    condition: hasShowName
-    commands: |
-      ( -background none
-        -fill white
-        -font Arial-Bold.ttf
-        -pointsize 96
-        -size 900x250
-        -gravity center
-        caption:{{showName.upper}}
-      )
-      -gravity south
-      -geometry +0+100
-      -composite
+  - name: "show-title-text"
+    condition: "title != null"
+    args:
+      - "("
+      - "-background"
+      - "none"
+      - "-fill"
+      - "white"
+      - "-font"
+      - "{{templateResources}}/fonts/Arial-Bold.ttf"
+      - "-pointsize"
+      - "96"
+      - "-size"
+      - "900x250"
+      - "-gravity"
+      - "center"
+      - "caption:{{title|upper}}"
+      - ")"
+      - "-gravity"
+      - "south"
+      - "-geometry"
+      - "+0+100"
+      - "-composite"
