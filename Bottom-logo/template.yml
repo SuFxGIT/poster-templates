@@ -1,0 +1,25 @@
+# Bottom Logo Poster Template
+# No filters or overlays — just places the logo at the bottom of the poster
+# Note: Template ID is determined by the directory name
+
+name: "Bottom-logo"
+description: "Plain poster with the logo positioned at the bottom, no other effects"
+version: "1.0"
+author: "PosterApp"
+
+steps:
+  - name: "add-logo"
+    condition: "hasLogo"
+    args:
+      - "("
+      - "{{logoPath}}"
+      - "-resize"
+      - "600x200>"
+      - ")"
+      - "-gravity"
+      - "south"
+      - "-geometry"
+      - "+0+100"
+      - "-compose"
+      - "over"
+      - "-composite"

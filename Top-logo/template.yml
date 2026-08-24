@@ -1,0 +1,25 @@
+# Top Logo Poster Template
+# No filters or overlays — just places the logo at the top of the poster
+# Note: Template ID is determined by the directory name
+
+name: "Top logo"
+description: "Plain poster with the logo positioned at the top, no other effects"
+version: "1.0"
+author: "PosterApp"
+
+steps:
+  - name: "add-logo"
+    condition: "hasLogo"
+    args:
+      - "("
+      - "{{logoPath}}"
+      - "-resize"
+      - "600x200>"
+      - ")"
+      - "-gravity"
+      - "north"
+      - "-geometry"
+      - "+0+100"
+      - "-compose"
+      - "over"
+      - "-composite"
